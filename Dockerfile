@@ -1,5 +1,7 @@
 # Usa una imagen base oficial de Node.js
-FROM node:20
+#FROM node:20
+
+FROM mcr.microsoft.com/windows/nanoserver:1809
 
 # Establece el directorio de trabajo en el contenedor
 WORKDIR /app
