@@ -38,8 +38,8 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/my-app:latest .
-          docker push ${{ secrets.DOCKER_USERNAME }}/my-app:latest
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/appdevops-app:latest .
+          docker push ${{ secrets.DOCKER_USERNAME }}/appdevops-app:latest
 
   deploy:
     runs-on: windows-latest
@@ -57,8 +57,8 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Pull Docker image
-        run: docker pull ${{ secrets.DOCKER_USERNAME }}/my-app:latest
+        run: docker pull ${{ secrets.DOCKER_USERNAME }}/appdevops-app:latest
 
       - name: Run Docker container
         run: |
-          docker run -d -p 80:3000 --name my-app ${{ secrets.DOCKER_USERNAME }}/my-app:latest
+          docker run -d -p 80:3000 --appdevops appdevops-app ${{ secrets.DOCKER_USERNAME }}/appdevops-app:latest
