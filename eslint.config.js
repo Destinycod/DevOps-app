@@ -1,16 +1,14 @@
 // eslint.config.js
-export default [
+module.exports = [
     {
-      files: ["**/*.js"], // Especifica los archivos que ESLint debe analizar
+      files: ["**/*.js"],
       languageOptions: {
-        ecmaVersion: "latest", // Define la versión de ECMAScript
-        sourceType: "module",  // O "script" si no estás usando módulos
+        ecmaVersion: "latest",
+        sourceType: "module",
       },
       rules: {
-        // Añade tus reglas de ESLint aquí
         "no-unused-vars": "warn",
         "semi": ["error", "always"],
       },
     },
   ];
-  
