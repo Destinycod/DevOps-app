@@ -3,9 +3,9 @@ services:
   app:
     build: .
     ports:
-      - "3000:3000"
+      - "0:3000"
     environment:
-      - MONGO_URL=mongodb://mongo:27017/yourdatabase
+      - MONGO_URL=mongodb+srv://claraema7:Claraema1717@cluster0.lcypcnd.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
       - PORT=3000
     depends_on:
       - mongo
