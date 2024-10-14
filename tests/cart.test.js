@@ -4,11 +4,21 @@ const mongoose = require('mongoose');
 const { MongoMemoryServer } = require('mongodb-memory-server');
 const app = require('../index'); 
 
-let mongoServer;
+let server;
+
+beforeAll(() => {
+  server = app.listen();
+});
+
+afterAll(() => {
+  clearTimeout(timeoutVariable);
+  clearInterval(intervalVariable);
+  server.close();
+});
 
 beforeAll(async () => {
-  mongoServer = await MongoMemoryServer.create();
-  const uri = mongoServer.getUri();
+  server = await MongoMemoryServer.create();
+  const uri = server.getUri();
 
   if (mongoose.connection.readyState === 0) {
     await mongoose.connect(uri, {
@@ -16,14 +26,13 @@ beforeAll(async () => {
       useUnifiedTopology: true,
     });
   }
+  //server = app.listen();
 });
 
 afterAll(async () => {
   //await mongoose.connection.dropDatabase();
   await mongoose.connection.close();
-  await mongoServer.stop();
-
-  server.close();
+  await server.stop();
 });
 
 describe('Cart API', () => {
