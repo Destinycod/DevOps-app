@@ -14,12 +14,19 @@ const app = express();
 
   // Conexión a la base de datos e inicializacion de Sentry solo si no estamos en el entorno de pruebas
 if (process.env.NODE_ENV !== 'test') {
+
     mongoose.connect(process.env.MONGO_URL)
       .then(() => console.log("DB connection successful"))
       .catch((error) => {
         Sentry.captureException(error);
         process.exit(1);
       });
+
+    const server = app.listen(process.env.PORT || 3000, () => {
+        const port = server.address().port;
+        console.log(`App listening on port ${port}`);
+    });
+
       Sentry.init({
         dsn: process.env.SENTRY_DSN, 
         integrations: [
@@ -54,10 +61,5 @@ app.use("/api/orders", orderRoute);
 
 // The error handler must be before any other error middleware and after all controllers
 app.use(Sentry.Handlers.errorHandler());
-
-const server = app.listen(process.env.PORT || 3000, () => {
-    const port = server.address().port;
-    console.log(`App listening on port ${port}`);
-});
 
 module.exports = app;
