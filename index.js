@@ -24,17 +24,15 @@ Sentry.init({
     tracesSampleRate: 1.0,
   });
 
-
-
 // The request handler must be the first middleware on the app
 app.use(Sentry.Handlers.requestHandler());
 app.use(Sentry.Handlers.tracingHandler());
 
-mongoose.connect(process.env.MONGO_URL)
+/*mongoose.connect(process.env.MONGO_URL)
 .then(()=> console.log("DB connection successfull"))
 .catch((error)=>{
     Sentry.captureException(error);
-});
+});*/
 
 app.get('/debug-sentry', function mainHandler(req, res) {
     throw new Error('My first Sentry error!');
@@ -51,10 +49,19 @@ app.use("/api/orders", orderRoute);
 app.use(Sentry.Handlers.errorHandler());
 
 //const port = process.env.PORT || 3000;
-server = app.listen(process.env.PORT || 3000, () => {
+/*server = app.listen(process.env.PORT || 3000, () => {
     const port = server.address().port;
     console.log(`App listening on port ${port}`);
-});
+});*/
 
-module.exports = server;
+// Conexión a la base de datos solo si no estamos en el entorno de pruebas
+if (process.env.NODE_ENV !== 'test') {
+    mongoose.connect(process.env.MONGO_URL)
+      .then(() => console.log("DB connection successful"))
+      .catch((error) => {
+        Sentry.captureException(error);
+        process.exit(1);
+      });
+}
+
 module.exports = app;

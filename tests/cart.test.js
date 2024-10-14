@@ -1,12 +1,12 @@
-//jest.mock('@sentry/profiling-node');
+
 const request = require('supertest');
-const mongoose = require('mongoose');
-const { MongoMemoryServer } = require('mongodb-memory-server');
+//const mongoose = require('mongoose');
+//const { MongoMemoryServer } = require('mongodb-memory-server');
 const app = require('../index'); 
 
-let server;
-let timeoutVariable, intervalVariable;
-
+//let mongoServer;
+//let timeoutVariable, intervalVariable;
+/*
 beforeAll(() => {
   server = app.listen();
 });
@@ -23,27 +23,22 @@ afterAll(() => {
   // Si tienes intervalos o timeouts
   if (timeoutVariable) clearTimeout(timeoutVariable);
   if (intervalVariable) clearInterval(intervalVariable);
-});
-
+});*/
+/*
 beforeAll(async () => {
-  server = await MongoMemoryServer.create();
-  const uri = server.getUri();
+  mongoServer = await MongoMemoryServer.create();
+  const uri = mongoServer.getUri();
 
-  if (mongoose.connection.readyState === 0) {
-    await mongoose.connect(uri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-  }
-  //server = app.listen();
+  // Conectar mongoose al servidor en memoria
+  await mongoose.connect(uri);
 });
 
 afterAll(async () => {
   //await mongoose.connection.dropDatabase();
   await mongoose.connection.close();
-  await server.stop();
+  await mongoServer.stop();
 });
-
+*/
 describe('Cart API', () => {
   let cartId;
 
