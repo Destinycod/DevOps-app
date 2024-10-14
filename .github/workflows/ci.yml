@@ -38,8 +38,7 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          docker rmi appdevops-app:latest
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/appdevops-app:latest .
+
           docker push ${{ secrets.DOCKER_USERNAME }}/appdevops-app:latest
 
   deploy:
