@@ -13,8 +13,8 @@ const Tracing = require("@sentry/tracing");
 const app = express();
 
 // Initialize Sentry
-Sentry.init({
-    dsn: process.env.SENTRY_DSN, // Coloca tu DSN aquí
+/*Sentry.init({
+    dsn: process.env.SENTRY_DSN, 
     integrations: [
       // enable HTTP calls tracing
       new Sentry.Integrations.Http({ tracing: true }),
@@ -22,7 +22,27 @@ Sentry.init({
       new Tracing.Integrations.Express({ app }),
     ],
     tracesSampleRate: 1.0,
-  });
+  });*/
+
+  // Conexión a la base de datos solo si no estamos en el entorno de pruebas
+if (process.env.NODE_ENV !== 'test') {
+    mongoose.connect(process.env.MONGO_URL)
+      .then(() => console.log("DB connection successful"))
+      .catch((error) => {
+        Sentry.captureException(error);
+        process.exit(1);
+      });
+      Sentry.init({
+        dsn: process.env.SENTRY_DSN, 
+        integrations: [
+          // enable HTTP calls tracing
+          new Sentry.Integrations.Http({ tracing: true }),
+          // enable Express.js middleware tracing
+          new Tracing.Integrations.Express({ app }),
+        ],
+        tracesSampleRate: 1.0,
+      });
+}
 
 // The request handler must be the first middleware on the app
 app.use(Sentry.Handlers.requestHandler());
@@ -54,14 +74,6 @@ app.use(Sentry.Handlers.errorHandler());
     console.log(`App listening on port ${port}`);
 });*/
 
-// Conexión a la base de datos solo si no estamos en el entorno de pruebas
-if (process.env.NODE_ENV !== 'test') {
-    mongoose.connect(process.env.MONGO_URL)
-      .then(() => console.log("DB connection successful"))
-      .catch((error) => {
-        Sentry.captureException(error);
-        process.exit(1);
-      });
-}
+
 
 module.exports = app;
