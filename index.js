@@ -12,19 +12,7 @@ const Tracing = require("@sentry/tracing");
 
 const app = express();
 
-// Initialize Sentry
-/*Sentry.init({
-    dsn: process.env.SENTRY_DSN, 
-    integrations: [
-      // enable HTTP calls tracing
-      new Sentry.Integrations.Http({ tracing: true }),
-      // enable Express.js middleware tracing
-      new Tracing.Integrations.Express({ app }),
-    ],
-    tracesSampleRate: 1.0,
-  });*/
-
-  // Conexión a la base de datos solo si no estamos en el entorno de pruebas
+  // Conexión a la base de datos e inicializacion de Sentry solo si no estamos en el entorno de pruebas
 if (process.env.NODE_ENV !== 'test') {
     mongoose.connect(process.env.MONGO_URL)
       .then(() => console.log("DB connection successful"))
@@ -48,12 +36,6 @@ if (process.env.NODE_ENV !== 'test') {
 app.use(Sentry.Handlers.requestHandler());
 app.use(Sentry.Handlers.tracingHandler());
 
-/*mongoose.connect(process.env.MONGO_URL)
-.then(()=> console.log("DB connection successfull"))
-.catch((error)=>{
-    Sentry.captureException(error);
-});*/
-
 app.get('/debug-sentry', function mainHandler(req, res) {
     throw new Error('My first Sentry error!');
 });
@@ -67,13 +49,5 @@ app.use("/api/orders", orderRoute);
 
 // The error handler must be before any other error middleware and after all controllers
 app.use(Sentry.Handlers.errorHandler());
-
-//const port = process.env.PORT || 3000;
-/*server = app.listen(process.env.PORT || 3000, () => {
-    const port = server.address().port;
-    console.log(`App listening on port ${port}`);
-});*/
-
-
 
 module.exports = app;
