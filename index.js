@@ -36,6 +36,11 @@ if (process.env.NODE_ENV !== 'test') {
 app.use(Sentry.Handlers.requestHandler());
 app.use(Sentry.Handlers.tracingHandler());
 
+// Ruta principal
+app.get('/', (req, res) => {
+    res.send('Hola Mundo desde la aplicación DevOps!');
+});
+
 app.get('/debug-sentry', function mainHandler(req, res) {
     throw new Error('My first Sentry error!');
 });
@@ -49,5 +54,10 @@ app.use("/api/orders", orderRoute);
 
 // The error handler must be before any other error middleware and after all controllers
 app.use(Sentry.Handlers.errorHandler());
+
+const server = app.listen(process.env.PORT || 3000, () => {
+    const port = server.address().port;
+    console.log(`App listening on port ${port}`);
+});
 
 module.exports = app;
